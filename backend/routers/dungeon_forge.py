@@ -1797,9 +1797,10 @@ YOU MUST:
             narration_text = dm_response.get("narration", "")
             logger.info(f"📝 DM narration received: {len(narration_text)} chars")
             
-            # Apply narration filter
+            # Apply narration filter using exploration limits (checks can happen in any mode, exploration is most common)
             from services.narration_filter import NarrationFilter
-            narration_text = NarrationFilter.apply_filter(narration_text, max_sentences=6, context="check_resolution")
+            exploration_limits = MODE_LIMITS.get("exploration", {"min": 6, "max": 10})
+            narration_text = NarrationFilter.apply_filter(narration_text, max_sentences=exploration_limits["max"], context="check_resolution")
             logger.info(f"✂️ Narration filtered: {len(narration_text)} chars")
             
             # Extract entity mentions

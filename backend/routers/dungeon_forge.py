@@ -2965,16 +2965,8 @@ async def process_action(request: dict):
             })
         
         # Extract entity mentions from narration (normal action)
+        # NOTE: Narration was already filtered at line 2715 with scene_mode context
         narration_text = dm_response.get("narration", "")
-        
-        # APPLY HUMAN DM FILTER - Mode-based sentence limits
-        from services.narration_filter import NarrationFilter
-        # Use mode-appropriate sentence limits (exploration: 3-6, others: 4)
-        current_mode = session_mode.get("mode", "exploration") if session_mode else "exploration"
-        if current_mode == "exploration":
-            narration_text = NarrationFilter.apply_filter(narration_text, max_sentences=6, context=f"{current_mode}_narration")
-        else:
-            narration_text = NarrationFilter.apply_filter(narration_text, max_sentences=4, context=f"{current_mode}_narration")
         
         entity_index = build_entity_index_from_world_blueprint(
             campaign["world_blueprint"],

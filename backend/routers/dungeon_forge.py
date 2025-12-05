@@ -869,7 +869,7 @@ Reasoning: {intent_flags.get('dc_reasoning', '')}
     else:
         check_result_info = "No check result yet - await player roll if check required."
     
-    prompt = f"""DUNGEON MASTER AGENT — EMERGENT SYSTEM PROMPT (v5.1 Stability Build)
+    prompt = f"""UNIFIED DM SYSTEM PROMPT v6.0
 
 SYSTEM
 

@@ -38,6 +38,19 @@ router = APIRouter(prefix="/api", tags=["dungeon_forge"])
 # Database will be injected from main app
 _db = None
 
+# ═══════════════════════════════════════════════════════════════════════
+# MODE-AWARE SENTENCE LIMITS (v6.1 Compliance)
+# ═══════════════════════════════════════════════════════════════════════
+MODE_LIMITS = {
+    "intro": {"min": 12, "max": 16},
+    "exploration": {"min": 6, "max": 10},
+    "social": {"min": 6, "max": 10},
+    "combat": {"min": 4, "max": 8},
+    "downtime": {"min": 4, "max": 8},
+    "travel": {"min": 6, "max": 8},
+    "rest": {"min": 3, "max": 6},
+}
+
 def set_database(db):
     """Set the MongoDB database instance"""
     global _db

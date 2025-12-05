@@ -262,19 +262,22 @@ const AdventureLogWithDM = forwardRef(({ onLoadingChange, ...props }, ref) => {
       
       const intro = worldBlueprint.intro;
       
-      if (!intro || typeof intro !== 'string' || intro.trim().length === 0) {
+      // Use extractNarration to safely handle any response structure
+      const cleanIntro = extractNarration(intro);
+      
+      if (!cleanIntro || cleanIntro.trim().length === 0) {
         console.warn('⚠️ No valid intro found in worldBlueprint');
         localStorage.setItem('dm-intro-played', '1');
         return;
       }
       
       // Intro is valid, display it (FALLBACK PATH - should rarely be used)
-      console.log('⚠️ Loading intro from worldBlueprint (no entity_mentions):', intro.substring(0, Math.min(100, intro.length)) + '...');
+      console.log('⚠️ Loading intro from worldBlueprint (no entity_mentions):', cleanIntro.substring(0, Math.min(100, cleanIntro.length)) + '...');
       
       // Add intro as first message
       const introMessage = {
         type: 'dm',
-        text: intro,
+        text: cleanIntro,
         timestamp: Date.now(),
         isIntro: true,
         entity_mentions: [] // Empty array - this is fallback path

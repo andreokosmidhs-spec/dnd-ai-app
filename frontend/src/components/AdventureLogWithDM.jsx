@@ -734,12 +734,25 @@ const AdventureLogWithDM = forwardRef(({ onLoadingChange, ...props }, ref) => {
   const formatMessage = (message) => {
     if (typeof message !== 'string') return message;
     
-    const paragraphs = message.split('\n\n').filter(p => p.trim());
-    if (paragraphs.length <= 1) return message;
+    // Handle both actual newlines and literal \n sequences
+    // First, replace literal \n\n with actual newlines
+    let cleanedMessage = message.replace(/\\n\\n/g, '\n\n').replace(/\\n/g, '\n');
     
+    // Split on double newlines to create paragraphs
+    const paragraphs = cleanedMessage.split(/\n\s*\n/).filter(p => p.trim());
+    
+    // If only one paragraph, just return it
+    if (paragraphs.length <= 1) return cleanedMessage;
+    
+    // Return paragraphs with proper spacing
     return paragraphs.map((paragraph, idx) => (
       <p key={idx} className={idx > 0 ? 'mt-3' : ''}>
-        {paragraph}
+        {paragraph.split('\n').map((line, lineIdx) => (
+          <React.Fragment key={lineIdx}>
+            {lineIdx > 0 && <br />}
+            {line}
+          </React.Fragment>
+        ))}
       </p>
     ));
   };

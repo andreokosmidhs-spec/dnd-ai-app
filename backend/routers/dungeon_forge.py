@@ -1616,11 +1616,12 @@ async def create_character_endpoint(request: CharacterCreateRequest):
                     world_blueprint=world_blueprint
                 )
                 
-                # FILTER SCENE DESCRIPTION (Fix for Contradiction #1)
+                # FILTER SCENE DESCRIPTION using exploration limits
                 from services.narration_filter import NarrationFilter
+                exploration_limits = MODE_LIMITS.get("exploration", {"min": 6, "max": 10})
                 filtered_scene_desc = NarrationFilter.apply_filter(
                     scene_data["description"], 
-                    max_sentences=6, 
+                    max_sentences=exploration_limits["max"], 
                     context="scene_description_character_creation"
                 )
                 

@@ -158,8 +158,7 @@ def build_scene_generator_prompt(
     # Format signature products
     products_text = ", ".join(signature_products[:3]) if signature_products else "various goods"
     
-    prompt = f"""You are a scene description generator for a D&D sandbox RPG.
-This follows the v4.1 Unified Narration Spec.
+    prompt = f"""UNIFIED DM SYSTEM PROMPT v6.0 (Scene Generation Mode)
 
 🚨🚨🚨 CRITICAL FAILURE CONDITIONS - YOU WILL FAIL IF: 🚨🚨🚨
 1. You don't give EXACTLY 3 directions: left, right, and ahead

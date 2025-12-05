@@ -1,0 +1,7 @@
+project_export.zip
+.env
+.env.local
+node_modules/
+.venv/
+__pycache__/
+.vscode/

@@ -1,0 +1,92 @@
+🎭 NPC REACTION ENGINE COMPREHENSIVE TESTING SUITE
+================================================================================
+✅ Backend connectivity confirmed: https://fantasy-forge-16.preview.emergentagent.com/api
+
+================================================================================
+PHASE 1: NPC ACTIVE BEHAVIOR & CONSEQUENCE TESTING
+================================================================================
+🎭 Testing NPC REACTION ENGINE - Raven's Hollow Opening Scene
+Backend URL: https://fantasy-forge-16.preview.emergentagent.com/api
+--------------------------------------------------------------------------------
+
+🧪 Testing: Scenario 1: Merchant Approach
+   Player Action: "I approach the merchant to ask about the disturbance"
+   Expected: Merchant must take specific action, create tension, advance plot
+   📝 Narration: The [[merchant]] you spot stands beside a colorful tapestry stall, inspecting a silk scarf with a discerning eye. His demeanor is calm, yet the tensio...
+   ✅ No passive patterns found
+❌ FAIL: Scenario 1: Merchant Approach - NPC Action Check - NO NPC ACTION VERBS FOUND. Expected one of: ['steps forward', 'eyes narrow', 'reaches for', 'leans in', 'glances around', 'shifts position', 'crosses arms', 'taps fingers', 'looks up', 'turns toward']
+   Details: Narration: The [[merchant]] you spot stands beside a colorful tapestry stall, inspecting a silk scarf with a discerning eye. His demeanor is calm, yet the tension in his brow betrays a subtle unease. As you approach, his gaze shifts to you, eyebrows lifting with a hint of curiosity. "Ah, another traveler inquiring about the ruckus, are we? It's been quite the day, with whispers of theft and scuffles stirring the market."
+
+🧪 Testing: Scenario 2: Suspicious Figure Investigation
+   Player Action: "I watch the hooded figure closely to see what they're doing"
+   Expected: Must trigger Perception/Insight check AND figure reacts with movement
+❌ FAIL: Scenario 2: Suspicious Figure Investigation - Exception: HTTPSConnectionPool(host='ai-dungeon-forge.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+   ❌ Exception: HTTPSConnectionPool(host='ai-dungeon-forge.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+
+🧪 Testing: Scenario 3: Guard Interaction
+   Player Action: "I ask the guard if they've seen anything unusual"
+   Expected: Guard must react with action, show suspicion, potentially prompt check
+   📝 Narration: The guard stands with a firm posture, his eyes scanning the bustling market as you approach. He shifts slightly at your question, adjusting the grip o...
+   ✅ No passive patterns found
+❌ FAIL: Scenario 3: Guard Interaction - NPC Action Check - NO NPC ACTION VERBS FOUND. Expected one of: ['straightens up', 'hand moves to', 'steps closer', 'narrows eyes', 'looks you over', 'crosses arms', 'shifts stance', 'turns to face']
+   Details: Narration: The guard stands with a firm posture, his eyes scanning the bustling market as you approach. He shifts slightly at your question, adjusting the grip on his spear as he considers. "Unusual?" he echoes, narrowing his gaze. "There was a commotion near the east end of the square earlier. Some say a hooded figure was seen slipping into the alley. Might be nothing, or it might be something worth your while."
+
+🧪 Testing: Scenario 4: Stealth Follow
+   Player Action: "I try to follow the hooded figure without being noticed"
+   Expected: Must trigger Stealth check, NPC reacts with movement, creates consequences
+   📝 Narration: The bustling Raven's Hollow Market Square teems with life, making it both a challenge and an opportunity for someone like you. The hooded figure weave...
+   ✅ No passive patterns found
+   ✅ NPC actions found: ['weaves through']
+❌ FAIL: Scenario 4: Stealth Follow - Ability Check Trigger - EXPECTED ABILITY CHECK BUT NONE TRIGGERED. Expected: ['Stealth']
+   Details: Narration: The bustling Raven's Hollow Market Square teems with life, making it both a challenge and an opportunity for someone like you. The hooded figure weaves through the crowd with practiced ease, their dark cloak blending with the shadows cast by market stalls. Nearby, a street performer juggles knives, creating a momentary distraction that could aid your stealthy pursuit. Somewhere in the distance, a lone bell tolls, marking the hour and adding urgency to your task.
+
+================================================================================
+NPC REACTION ENGINE TEST SUMMARY: 0/4 tests passed
+
+FAILED TESTS:
+  - Scenario 1: Merchant Approach - NPC Action Check: NO NPC ACTION VERBS FOUND. Expected one of: ['steps forward', 'eyes narrow', 'reaches for', 'leans in', 'glances around', 'shifts position', 'crosses arms', 'taps fingers', 'looks up', 'turns toward']
+  - Scenario 2: Suspicious Figure Investigation: Exception: HTTPSConnectionPool(host='ai-dungeon-forge.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+  - Scenario 3: Guard Interaction - NPC Action Check: NO NPC ACTION VERBS FOUND. Expected one of: ['straightens up', 'hand moves to', 'steps closer', 'narrows eyes', 'looks you over', 'crosses arms', 'shifts stance', 'turns to face']
+  - Scenario 4: Stealth Follow - Ability Check Trigger: EXPECTED ABILITY CHECK BUT NONE TRIGGERED. Expected: ['Stealth']
+================================================================================
+
+================================================================================
+PHASE 2: NPC DIALOGUE RESPONSE TESTING
+================================================================================
+
+🗣️ Testing NPC Dialogue Responses
+--------------------------------------------------------------------------------
+
+🧪 Testing: Direct Question to Bartender
+   Player Says: "Have you heard anything about strange happenings in town?"
+   Expected: Bartender must react physically and provide dialogue with information
+   📝 Response: A weathered patron at the bar looks up as you speak, his eyes narrowing with a mix of curiosity and caution. He leans back slightly, considering your ...
+   ✅ NPC physical reactions: ['looks up']
+   ✅ Direct dialogue present
+✅ PASS: Direct Question to Bartender
+   Details: Physical reactions: ['looks up']
+
+🧪 Testing: Intimidation Attempt
+   Player Says: "You better tell me what you know about the Shadow Collective, or things might get unpleasant."
+   Expected: Must trigger social check and NPC shows fear through actions
+   📝 Response: The [[barkeep]] pauses, eyes narrowing slightly as she regards you with a mix of suspicion and curiosity. Her fingers tap a slow rhythm on the wooden ...
+❌ FAIL: Intimidation Attempt - NPC Physical Reaction - NO NPC PHYSICAL REACTIONS FOUND. Expected: ['steps back', 'eyes widen', 'hand moves to', 'voice trembles', 'looks around nervously', 'swallows hard', 'backs away']
+   Details: Response: The [[barkeep]] pauses, eyes narrowing slightly as she regards you with a mix of suspicion and curiosity. Her fingers tap a slow rhythm on the wooden counter, a quiet drumbeat in the dimly lit tavern. 
+
+"Listen here," she says, her voice low but firm. "People who talk about the Shadow Collective often find themselves with more trouble than they bargained for. But... if you're serious, you might want to check the alleys after midnight."
+
+Her gaze flickers to the door, suggesting a pointed warning. "Just be sure you know what you're getting into."
+
+================================================================================
+NPC REACTION ENGINE TEST SUMMARY: 1/2 tests passed
+
+FAILED TESTS:
+  - Intimidation Attempt - NPC Physical Reaction: NO NPC PHYSICAL REACTIONS FOUND. Expected: ['steps back', 'eyes widen', 'hand moves to', 'voice trembles', 'looks around nervously', 'swallows hard', 'backs away']
+================================================================================
+
+================================================================================
+FINAL NPC REACTION ENGINE TEST RESULTS
+================================================================================
+❌ SOME NPC REACTION ENGINE TESTS FAILED
+⚠️ NPCs may still be acting as passive information terminals
+⚠️ Review failed tests above for specific issues

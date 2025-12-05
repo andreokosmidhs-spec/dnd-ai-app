@@ -1,0 +1,54 @@
+⚡ NPC REACTION ENGINE HARD CONSTRAINTS VALIDATION - CRITICAL PRIORITY
+================================================================================
+🏥 Testing Backend Health
+------------------------------------------------------------
+✅ Backend is online: Sentient RPG Engine - Backend Online
+
+
+================================================================================
+🎯 TESTING: HARD CONSTRAINTS enforcement for NPC Reaction Engine
+📋 OBJECTIVES:
+   1. MANDATORY NPC ACTIONS (Constraint #1)
+   2. MANDATORY ABILITY CHECK TRIGGERS (Constraint #2)
+   3. MANDATORY CONSEQUENCES (Constraint #3)
+   4. MANDATORY PLOT ADVANCEMENT (Constraint #4)
+   5. OUTPUT STRUCTURE (Constraint #5)
+================================================================================
+⚡ Testing NPC Reaction Engine HARD CONSTRAINTS - CRITICAL
+Backend URL: https://fantasy-forge-16.preview.emergentagent.com/api
+------------------------------------------------------------
+
+🧪 Testing: CONSTRAINT #2: Stealth Action (MANDATORY CHECK)
+   Player: "I try to follow the hooded figure discreetly without being noticed"
+   Constraint: ABILITY CHECK ENGINE IS MANDATORY
+   Expected: Must trigger Stealth check with clear success/fail branches
+   📝 Narration: The bustling market square hums with mid-day trade, vibrant stalls dotting the landscape. Your keen eyes lock onto the hooded figure weaving through t...
+❌ FAIL: CONSTRAINT #2: Stealth Action (MANDATORY CHECK) - ❌ CRITICAL FAILURE - ABILITY CHECK ENGINE IS MANDATORY: No mechanics.check_request present
+   ❌ CONSTRAINT VIOLATION: No ability check triggered
+
+🧪 Testing: CONSTRAINT #2: Social Deception (MANDATORY CHECK)
+   Player: "I lie to the guard and say I'm investigating on behalf of the city council"
+   Constraint: ABILITY CHECK ENGINE IS MANDATORY
+   Expected: Must trigger Deception check for lying to authority
+❌ FAIL: CONSTRAINT #2: Social Deception (MANDATORY CHECK) - Exception: HTTPSConnectionPool(host='ai-dungeon-forge.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+   ❌ Exception: HTTPSConnectionPool(host='ai-dungeon-forge.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+
+🧪 Testing: CONSTRAINT #1: NPC Action (MANDATORY BEHAVIOR)
+   Player: "I approach the merchant to ask about strange activity"
+   Constraint: NPC ACTION IS MANDATORY
+   Expected: Merchant MUST take concrete physical action, not just be 'willing to talk'
+❌ FAIL: CONSTRAINT #1: NPC Action (MANDATORY BEHAVIOR) - Exception: HTTPSConnectionPool(host='ai-dungeon-forge.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+   ❌ Exception: HTTPSConnectionPool(host='ai-dungeon-forge.preview.emergentagent.com', port=443): Read timed out. (read timeout=30)
+
+🧪 Testing: CONSTRAINT #1: Investigation Response (NPC REACTIONS)
+   Player: "I watch the guard's body language for signs of deception"
+   Constraint: NPC ACTION IS MANDATORY + ABILITY CHECK ENGINE
+   Expected: Must trigger Insight check AND show guard's physical reaction
+   📝 Narration: The market square buzzes with midday activity, but your focus is on the [[guard]], standing rigid near the fountain. He keeps a watchful eye on the cr...
+❌ FAIL: CONSTRAINT #1: Investigation Response (NPC REACTIONS) - ❌ CRITICAL FAILURE - NPC ACTION IS MANDATORY + ABILITY CHECK ENGINE: No check OR no NPC reaction
+   ❌ CONSTRAINT VIOLATION: No ability check triggered
+
+🧪 Testing: CONSTRAINT #3: Consequence Branches
+   Player: "I climb onto the roof to get a better view"
+   Constraint: CONSEQUENCES ARE REQUIRED
+   Expected: on_success and on_fail must be different and meaningful

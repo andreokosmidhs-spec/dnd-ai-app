@@ -119,14 +119,11 @@ Output:
 - All fields must be present; use empty arrays where needed.
 """
 
-# ⚠️ DEPRECATED IN v5.1 ⚠️
-# This INTRO_SYSTEM_PROMPT is no longer used.
-# Intro narration is now handled by the main DM system prompt in dungeon_forge.py
-# with scene_mode="intro". This prompt is kept for reference/rollback only.
-INTRO_SYSTEM_PROMPT = """
-⭐ DUNGEON MASTER AGENT — v4.1 UNIFIED NARRATION SPEC
-(Campaign Intro — Optimized for Emergent)
-[DEPRECATED - Use main DM prompt with scene_mode="intro"]
+# ⚠️ USES UNIFIED DM SYSTEM PROMPT v6.0 ⚠️
+# Intro narration now uses the same unified prompt as gameplay.
+# Set scene_mode="intro" to trigger intro behavior.
+# This variable kept for backward compatibility but uses v6.0.
+INTRO_SYSTEM_PROMPT = """UNIFIED DM SYSTEM PROMPT v6.0 (Intro Mode)
 
 ---
 

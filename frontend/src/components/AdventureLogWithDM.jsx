@@ -291,7 +291,7 @@ const AdventureLogWithDM = forwardRef(({ onLoadingChange, ...props }, ref) => {
       // Generate TTS if enabled
       if (isTTSEnabled && generateSpeech) {
         try {
-          const audioUrl = await generateSpeech(intro, 'onyx', false);
+          const audioUrl = await generateSpeech(cleanIntro, 'onyx', false);
           if (audioUrl) {
             const updatedIntroMessage = { ...introMessage, audioUrl };
             setMessages([updatedIntroMessage]);

@@ -2896,6 +2896,92 @@ async def process_action(request: dict):
         )
         logger.info(f"   DM Response: narration length={len(dm_response.get('narration', ''))}")
         
+        # STORY CONSISTENCY LAYER v6.0 (validate and correct DM output)
+        from config.story_consistency_config import (
+            USE_STORY_CONSISTENCY_LAYER,
+            CONSISTENCY_AUTO_CORRECT,
+            CONSISTENCY_HARD_BLOCK
+        )
+        
+        if USE_STORY_CONSISTENCY_LAYER:
+            logger.info("🔍 Running STORY CONSISTENCY LAYER v6.0...")
+            from services.story_consistency_agent import validate_dm_output
+            
+            # Build dm_draft from DM output
+            dm_draft = {
+                "narration": dm_response.get("narration", ""),
+                "scene_mode": dm_response.get("scene_mode", session_mode.get("mode", "exploration") if session_mode else "exploration"),
+                "requested_check": dm_response.get("requested_check"),
+                "world_state_update": dm_response.get("world_state_update", {}),
+                "player_updates": dm_response.get("player_updates", {}),
+                "notes": dm_response.get("scene_status", {})
+            }
+            
+            # Prepare canonical data structures
+            quest_state = world_state["world_state"].get("quests", {})
+            npc_registry = world_state["world_state"].get("npcs", {})
+            story_threads = world_state["world_state"].get("story_threads", [])
+            scene_history = world_state["world_state"].get("recent_scenes", [])
+            
+            mechanical_context = {
+                "player_state": char_doc["character_state"],
+                "check_result": check_result,
+                "combat_state": world_state["world_state"].get("combat_state")
+            }
+            
+            # Validate DM output
+            validation = await validate_dm_output(
+                dm_draft=dm_draft,
+                world_blueprint=campaign["world_blueprint"],
+                world_state=world_state["world_state"],
+                quest_state=quest_state,
+                npc_registry=npc_registry,
+                story_threads=story_threads,
+                scene_history=scene_history,
+                mechanical_context=mechanical_context
+            )
+            
+            decision = validation.get("decision", "approve")
+            logger.info(f"   Story Consistency Decision: {decision}")
+            
+            if decision == "approve":
+                corrected = validation.get("corrected_narration")
+                if corrected and CONSISTENCY_AUTO_CORRECT:
+                    dm_response["narration"] = corrected
+                    logger.info("   Applied minimal consistency corrections")
+                elif corrected:
+                    logger.info("   Consistency corrections available but auto-correct disabled")
+            
+            elif decision == "revise_required":
+                corrected = validation.get("corrected_narration")
+                if corrected and CONSISTENCY_AUTO_CORRECT:
+                    dm_response["narration"] = corrected
+                    changes = validation.get("narration_changes_summary", [])
+                    logger.warning(f"⚠️ Story consistency revisions applied: {changes}")
+                else:
+                    logger.warning(f"⚠️ Story consistency issues detected but auto-correct disabled")
+            
+            elif decision == "hard_block":
+                issues = validation.get("issues", [])
+                logger.error(f"❌ STORY CONSISTENCY HARD BLOCK: {len(issues)} critical issues")
+                for issue in issues:
+                    logger.error(f"   [{issue['severity']}] {issue['type']}: {issue['message']}")
+                
+                if CONSISTENCY_HARD_BLOCK:
+                    # Replace narration with safe fallback
+                    dm_response["narration"] = "The scene becomes unclear for a moment. What do you do?"
+                    logger.error("   DM output replaced with safe fallback")
+                else:
+                    logger.warning("   Hard block disabled - using original DM output with warnings")
+            
+            # Log all issues for debugging
+            if validation.get("issues"):
+                for issue in validation["issues"]:
+                    if issue["severity"] == "error":
+                        logger.error(f"   Consistency Issue: [{issue['type']}] {issue['message']}")
+                    elif issue["severity"] == "warning":
+                        logger.warning(f"   Consistency Warning: [{issue['type']}] {issue['message']}")
+        
         # LORE CHECKER (P2.5: soft mode by default)
         logger.info("🔍 Running LORE CHECKER...")
         from services.lore_checker_service import check_lore_consistency

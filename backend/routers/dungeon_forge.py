@@ -1133,55 +1133,27 @@ Player Action
 
 OUTPUT FORMAT
 
-Always respond with a single JSON object:
+Return ONLY this JSON:
 
 {{
   "narration": "string",
-  "requested_check": {{
-    "ability": "STR | DEX | CON | INT | WIS | CHA",
-    "skill": "string or null",
-    "dc": 10,
-    "reason": "string"
+  "requested_check": null | {{
+      "ability": "STR | DEX | CON | INT | WIS | CHA",
+      "reason": "string"
   }},
-  "entities": [
-    {{
-      "name": "string",
-      "type": "NPC | Monster | Object",
-      "visibility": "seen | heard | smelled"
-    }}
-  ],
-  "scene_mode": "intro | exploration | combat | social | investigation | travel | rest | downtime",
+  "entities": [],
+  "scene_mode": "intro | exploration | combat | social | travel | rest",
   "world_state_update": {{}},
   "player_updates": {{}}
 }}
 
-Rules:
+Restrictions:
 
-narration:
+requested_check ONLY when absolutely necessary.
 
-Second-person POV.
+NEVER add fields not defined above.
 
-Mode-specific sentence limits respected.
-
-Final sentence is an open invitation to act.
-
-requested_check:
-
-Null if no new check is required.
-
-entities:
-
-Only entities actually present in the scene.
-
-scene_mode:
-
-One of the listed values, matching your internal mode.
-
-world_state_update, player_updates:
-
-Always present; {{}} if no changes.
-
-No extra keys, no markdown, no text outside JSON.
+NEVER invent entities unless visible.
 
 ---
 

@@ -564,9 +564,13 @@ const RPGGame = () => {
     setInventory(startingItems);
     
     // Use the INTRO-NARRATOR generated markdown as the first message
+    // Use extractNarration to safely handle any response structure
+    const cleanIntro = extractNarration(intro_markdown);
+    console.log('🧹 Cleaned intro markdown:', cleanIntro.substring(0, 100));
+    
     const initialLog = [{
       type: 'dm',  // P3.5 Fix: Use 'dm' type so AdventureLogWithDM renders it
-      text: intro_markdown,  // P3.5 Fix: Use 'text' not 'message'
+      text: cleanIntro,  // P3.5 Fix: Use cleaned narration text only
       timestamp: Date.now(),
       isCinematic: true,  // Mark as cinematic intro
       source: 'intro',

@@ -3063,22 +3063,19 @@ async def process_action(request: dict):
         # INJECT GENERATED SCENE: If location changed, prepend the scene description
         if world_state.get("_generated_scene"):
             generated_scene = world_state["_generated_scene"]
-            # FILTER SCENE DESCRIPTION (Fix for Contradiction #1)
-            generated_scene = NarrationFilter.apply_filter(generated_scene, max_sentences=6, context="scene_description")
+            # FILTER SCENE DESCRIPTION using mode-aware limit
+            current_mode = session_mode.get("mode", "exploration") if session_mode else "exploration"
+            mode_limits = MODE_LIMITS.get(current_mode, {"min": 4, "max": 8})
+            generated_scene = NarrationFilter.apply_filter(generated_scene, max_sentences=mode_limits["max"], context=f"scene_description_{current_mode}")
             # Prepend scene to narration
             narration_text = f"{generated_scene}\n\n{narration_text}"
             logger.info(f"✨ Injected filtered scene into narration")
             
             # Add location to world_state_update
             world_state_update["current_location"] = world_state["world_state"]["current_location"]
-        
-        # FINAL SAFETY CHECK: Mode-based filtering before returning
-        from services.narration_filter import NarrationFilter
-        current_mode = session_mode.get("mode", "exploration") if session_mode else "exploration"
-        if current_mode == "exploration":
-            narration_text = NarrationFilter.apply_filter(narration_text, max_sentences=6, context="final_return_exploration")
-        else:
-            narration_text = NarrationFilter.apply_filter(narration_text, max_sentences=4, context="final_return")
+            
+            # After prepending scene, re-apply final filter to combined narration
+            narration_text = NarrationFilter.apply_filter(narration_text, max_sentences=mode_limits["max"], context=f"final_combined_{current_mode}")
         
         # v4.1 UNIFIED SPEC: No options field - narration ends with open prompts
         return api_success({

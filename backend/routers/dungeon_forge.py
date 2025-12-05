@@ -1159,7 +1159,7 @@ NEVER invent entities unless visible.
 
 PRIORITY HIERARCHY
 
-When instructions conflict, obey this order:
+If conflicts arise:
 
 SYSTEM
 
@@ -1169,39 +1169,91 @@ TASK RULES
 
 CONTEXT
 
-OUTPUT FORMAT
+Style guidance (e.g., Matt Mercer inspiration)
 
-Any external style/reference documents
+Scene history
 
-External documents (e.g., "Matt Mercer Framework") are advisory and must not override this hierarchy.
+SYSTEM overrides everything.
 
-CHANGELOG (v5.1 Stability Build)
+---
 
-Intro integrated into the main DM system:
+INJECTED CONTEXT FOR THIS REQUEST
 
-scene_mode: "intro" added with fixed 12–16 sentence macro→micro structure.
+Player Character
+```
+Name: {character_name}
+Class: {character_class}
+Level: {character_state.get("level", 1)}
+HP: {character_state.get("hp", "?")} / {character_state.get("max_hp", "?")}
+AC: {character_state.get("ac", "?")}
 
-Intro now uses the same POV, style, boundaries, and JSON schema as all other modes.
+Stats:
+  STR {character_state.get("stats", {}).get("strength", 10)} ({(character_state.get("stats", {}).get("strength", 10) - 10) // 2:+d})
+  DEX {character_state.get("stats", {}).get("dexterity", 10)} ({(character_state.get("stats", {}).get("dexterity", 10) - 10) // 2:+d})
+  CON {character_state.get("stats", {}).get("constitution", 10)} ({(character_state.get("stats", {}).get("constitution", 10) - 10) // 2:+d})
+  INT {character_state.get("stats", {}).get("intelligence", 10)} ({(character_state.get("stats", {}).get("intelligence", 10) - 10) // 2:+d})
+  WIS {character_state.get("stats", {}).get("wisdom", 10)} ({(character_state.get("stats", {}).get("wisdom", 10) - 10) // 2:+d})
+  CHA {character_state.get("stats", {}).get("charisma", 10)} ({(character_state.get("stats", {}).get("charisma", 10) - 10) // 2:+d})
 
-Removed need for a separate Intro System Prompt:
+Passive Perception: {10 + (character_state.get("stats", {}).get("wisdom", 10) - 10) // 2}
+Skills: {", ".join(character_state.get("skills", [])) if character_state.get("skills") else "None"}
+Conditions: {", ".join(character_state.get("conditions", [])) if character_state.get("conditions") else "None"}
+Inventory: {", ".join(character_state.get("inventory", [])) if character_state.get("inventory") else "Empty"}
+```
 
-All intro behavior is now governed by this single DM system prompt, eliminating multiple narration systems.
+Environment
+```
+Location: {current_location}
+Time: {time_of_day}
+Weather: {weather}
 
-Clarified story engine behavior for intros:
+{location_constraints if location_constraints else ""}
+```
 
-World, factions, geography, starting region, starting town, and immediate quest hook are all generated from world_blueprint in a controlled, second-person way.
+Visible Entities
+```
+{npc_constraints if npc_constraints else "No visible NPCs or creatures."}
+```
 
-Preserved mechanics and schema:
+Ongoing Situations
+```
+{ongoing_situations if ongoing_situations else "None"}
+```
 
-No changes to requested_check, check models, or DM JSON shape.
+Auto-Revealed Information (Passive Perception)
+```
+{", ".join(auto_revealed_info) if auto_revealed_info else "Nothing automatically noticed."}
+```
 
-Aligned scene modes across the app:
+Active Conditions
+```
+{"; ".join(condition_explanations) if condition_explanations else "None"}
+```
 
-intro sits alongside exploration, combat, social, etc., under one unified rule set.
+Combat State (if applicable)
+```
+{mechanical_display if mechanical_display else ""}
+```
 
-Improved maintainability:
+System-Calculated DC (if provided)
+```
+{dc_info if dc_info else "No DC provided - determine if check is needed based on action context."}
+```
 
-All narration instructions now live in one system prompt, preventing confusion and drift across files.
+Check Result (if resolved)
+```
+{check_result_info}
+```
+
+Current Scene Mode
+```
+{session_mode.get("mode", "exploration") if session_mode else "exploration"}
+```
+
+Player Action
+```
+{player_action}
+```
 
 ---
 

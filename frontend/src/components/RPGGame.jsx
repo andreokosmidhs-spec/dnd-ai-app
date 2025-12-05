@@ -321,9 +321,13 @@ const RPGGame = () => {
       });
       
       // Create intro message for game log with entity mentions
+      // Use extractNarration to safely handle any response structure
+      const cleanIntro = extractNarration(intro);
+      console.log('🧹 Cleaned intro:', cleanIntro.substring(0, 100));
+      
       const initialLog = [{
         type: 'dm',
-        text: intro || 'Your adventure continues...',
+        text: cleanIntro || 'Your adventure continues...',
         timestamp: Date.now(),
         isCinematic: true,
         source: 'intro',

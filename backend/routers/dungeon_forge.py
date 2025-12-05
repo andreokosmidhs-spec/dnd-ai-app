@@ -2944,9 +2944,10 @@ async def process_action(request: dict):
             # Extract entity mentions from narration (combat start)
             combat_narration = dm_response.get("narration", "") + "\n\n**Combat begins!**"
             
-            # FILTER COMBAT NARRATION
+            # FILTER COMBAT NARRATION using mode-aware limit
             from services.narration_filter import NarrationFilter
-            combat_narration = NarrationFilter.apply_filter(combat_narration, max_sentences=4, context="combat_start")
+            combat_limits = MODE_LIMITS.get("combat", {"min": 4, "max": 8})
+            combat_narration = NarrationFilter.apply_filter(combat_narration, max_sentences=combat_limits["max"], context="combat_start")
             
             entity_index = build_entity_index_from_world_blueprint(
                 campaign["world_blueprint"],

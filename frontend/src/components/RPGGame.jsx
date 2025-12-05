@@ -464,9 +464,10 @@ const RPGGame = () => {
       updateProgress(55);
       
       // CRITICAL: Store intro in worldBlueprint so AdventureLogWithDM can find it
+      // Use cleanIntro (already extracted above) to ensure consistency
       const worldBlueprintWithIntro = {
         ...world_blueprint,
-        intro: intro_markdown
+        intro: cleanIntro
       };
       setWorldBlueprint(worldBlueprintWithIntro);
       console.log('📝 [FLOW] Stored intro in worldBlueprint for AdventureLogWithDM');

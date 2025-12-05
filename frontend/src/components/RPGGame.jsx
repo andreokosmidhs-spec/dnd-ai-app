@@ -158,6 +158,35 @@ const RPGGame = () => {
     }
   };
 
+  // Helper function to safely extract narration text from any response structure
+  const extractNarration = (data) => {
+    // If data is null/undefined, return empty string
+    if (!data) return '';
+    
+    // If data is a string, check if it's JSON
+    if (typeof data === 'string') {
+      // Check if it looks like JSON (starts with { or [)
+      const trimmed = data.trim();
+      if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          return extractNarration(parsed);
+        } catch (e) {
+          // Not valid JSON, return as-is
+          return data;
+        }
+      }
+      return data;
+    }
+    
+    // If data is an object, try to extract narration field
+    if (typeof data === 'object') {
+      return data.narration || data.intro_markdown || data.text || '';
+    }
+    
+    return String(data);
+  };
+
   const handleLoadLastCampaign = (campaignData) => {
     console.log('🔄 Loading campaign from database:', campaignData.campaign_id);
     console.log('🔄 campaignData keys:', Object.keys(campaignData));

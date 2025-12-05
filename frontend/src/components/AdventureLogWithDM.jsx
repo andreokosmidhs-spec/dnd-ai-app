@@ -178,14 +178,26 @@ const AdventureLogWithDM = forwardRef(({ onLoadingChange, ...props }, ref) => {
     
     // If data is a string, check if it's JSON
     if (typeof data === 'string') {
+      let trimmed = data.trim();
+      
+      // Remove code fence markers if present
+      if (trimmed.startsWith('```json') || trimmed.startsWith('```')) {
+        trimmed = trimmed.replace(/^```(json)?/g, '').replace(/```$/g, '').trim();
+      }
+      
+      // Remove 'json' prefix if present (e.g., "json{...}")
+      if (trimmed.startsWith('json{') || trimmed.startsWith('json[')) {
+        trimmed = trimmed.substring(4).trim();
+      }
+      
       // Check if it looks like JSON (starts with { or [)
-      const trimmed = data.trim();
       if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
         try {
           const parsed = JSON.parse(trimmed);
           return extractNarration(parsed);
         } catch (e) {
           // Not valid JSON, return as-is
+          console.warn('Failed to parse JSON intro:', e);
           return data;
         }
       }

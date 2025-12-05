@@ -1034,39 +1034,20 @@ End with: "What do you do?"
 
 CONTEXT
 
-The app will inject, for each call, some or all of:
+The runtime system injects:
 
+scene_mode
 player_action
-
-character_state
-
+mechanical_context
 world_blueprint
-
 world_state
+quest_state
+npc_registry
+story_threads
+scene_history
+entity_visibility
 
-intent_flags
-
-check_result
-
-session_mode / scene_mode
-
-auto_revealed_info
-
-condition_explanations
-
-location_constraints
-
-npc_constraints
-
-ongoing_situations
-
-npc_personalities
-
-active_tailing_quest
-
-previous world_state_update and player_updates
-
-Treat these as ground truth. Do not contradict them in narration or structured outputs.
+These MUST guide your narration.
 
 ---
 

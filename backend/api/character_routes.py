@@ -143,36 +143,38 @@ async def make_ability_check(
     characters_db[character_id] = character
     
     return result
+from services.progression_service import get_xp_to_next
 
 @router.post("/{character_id}/level-up")
 async def level_up_character(character_id: str):
-    """Level up the character"""
+    """Level up using canonical XP progression"""
+
     if character_id not in characters_db:
         raise HTTPException(status_code=404, detail="Character not found")
-    
+
     character = characters_db[character_id]
-    
-    # Check if character has enough XP
-    xp_required = character.level * 300  # Simplified XP system
-    if character.experience < xp_required:
+
+    xp_needed = get_xp_to_next(character.level)
+
+    if xp_needed <= 0:
+        raise HTTPException(status_code=400, detail="Already at max level")
+
+    if character.experience < xp_needed:
         raise HTTPException(
-            status_code=400, 
-            detail=f"Not enough experience. Need {xp_required}, have {character.experience}"
+            status_code=400,
+            detail=f"Not enough XP. Need {xp_needed}, have {character.experience}"
         )
-    
-    # Level up
+
+    # Deduct XP
+    character.experience -= xp_needed
+
+    # Increase level
     character.level += 1
-    character.experience -= xp_required
-    
-    # Increase hit points
-    class_hit_dice = {'fighter': 10, 'wizard': 6, 'cleric': 8, 'rogue': 8}
-    hit_die = class_hit_dice.get(character.character_class.lower(), 8)
-    constitution_modifier = game_engine.get_stat_modifier(character.stats.constitution)
-    hp_increase = random.randint(1, hit_die) + constitution_modifier
-    
-    character.hit_points += hp_increase
-    character.max_hit_points += hp_increase
-    
+
+    # TODO: HP gain, spell slots, etc, using standardized logic later
+
+    return { "message": f"{character.name} reached level {character.level}" }
+
     # Add spell slots if spellcaster
     if character.character_class.lower() in ['wizard', 'cleric', 'sorcerer']:
         # Simplified spell slot progression
